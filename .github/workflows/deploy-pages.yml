@@ -1,0 +1,54 @@
+name: Deploy pages
+
+on:
+  push:
+    branches: main
+
+jobs:
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        working-directory: compiler
+        run: |
+          # Remove software that the GitHub Actions image adds to base Ubuntu,
+          # to make CI errors easier to debug locally.
+          sudo rm -rf /usr/local
+
+          sudo apt-get update
+
+          # Install MOTION dependencies
+          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev
+
+          # Install MP-SPDZ dependencies
+          sudo apt-get -y install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 texinfo yasm
+
+          sudo apt-get -y install graphviz
+
+          # Install LaTeX dependencies
+          sudo apt-get -y install \
+            texlive-base \
+            texlive-latex-extra \
+            texlive-bibtex-extra \
+            texlive-publishers \
+            texlive-science
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Build results markdown
+        run: ./compiler/make_results_markdown.py static
+      - name: Build paper
+        run: |
+          yes '' | make -C overleaf || true
+          mv overleaf/paper_SIMD.pdf static || true
+      - name: Push to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: static

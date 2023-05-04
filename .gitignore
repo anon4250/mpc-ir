@@ -1,0 +1,12 @@
+*.aux
+*.bcf
+*.log
+*.out
+*.pdf
+*.xml
+
+*.synctex
+
+.venv/
+*.pyc
+__pycache__/

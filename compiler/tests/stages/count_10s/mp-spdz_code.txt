@@ -1,0 +1,69 @@
+def count_10s(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = [None] * (N_0)
+    _10_0 = [None] * (N_0)
+    _11_0 = [None] * (N_0)
+    _12_0 = [None] * (N_0)
+    _13_0 = [None] * (N_0)
+    _2_2 = [None] * (N_0)
+    _3_2 = [None] * (N_0)
+    _4_2 = [None] * (N_0)
+    _5_0 = [None] * (N_0)
+    _6_0 = [None] * (N_0)
+    _7_0 = [None] * (N_0)
+    _8_0 = [None] * (N_0)
+    _9_0 = [None] * (N_0)
+    s0_2 = [None] * (N_0)
+    s0_3 = [None] * (N_0)
+    s1_2 = [None] * (N_0)
+    s1_3 = [None] * (N_0)
+    scount_2 = [None] * (N_0)
+    scount_3 = [None] * (N_0)
+    scount_4 = [None] * (N_0)
+    # Function body
+    s0_1 = _v.sbool(False)
+    s1_1 = _v.sbool(False)
+    scount_1 = sint(0)
+    _8_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _9_0 = _v.lift(lambda indices: (Syms_0[0]), [N_0])
+    _10_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _11_0 = _v.lift(lambda indices: (Syms_0[0]), [N_0])
+    _12_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _13_0 = _v.lift(lambda indices: (Syms_0[1]), [N_0])
+    _5_0 = _v.lift(lambda indices: s0_1, [N_0])
+    _6_0 = _v.lift(lambda indices: s1_1, [N_0])
+    _7_0 = _v.lift(lambda indices: scount_1, [N_0])
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_8_0, [N_0], [None]) != _v.vectorized_access_simd(_9_0, [N_0], [None])))
+    _v.vectorized_assign(_3_2, [N_0], [None], (_v.vectorized_access_simd(_10_0, [N_0], [None]) == _v.vectorized_access_simd(_11_0, [N_0], [None])))
+    _v.vectorized_assign(s0_3, [N_0], [None], (_v.vectorized_access_simd(_12_0, [N_0], [None]) == _v.vectorized_access_simd(_13_0, [N_0], [None])))
+    for _15_0 in range(0, N_0):
+        # Set ϕ value
+        if _15_0 == 0:
+            _v.vectorized_assign(s0_2, [N_0], [_15_0], _v.vectorized_access(_5_0, [N_0], [_15_0]))
+        else:
+            _v.vectorized_assign(s0_2, [N_0], [_15_0], _v.vectorized_access(s0_3, [N_0], [(_15_0 - 1)]))
+    # Loop exit ϕ values
+    _v.vectorized_assign(s0_2, [N_0], [_15_0], _v.vectorized_access(s0_3, [N_0], [(_15_0 - 1)]))
+    for _16_0 in range(0, N_0):
+        # Set ϕ value
+        if _16_0 == 0:
+            _v.vectorized_assign(s1_2, [N_0], [_16_0], _v.vectorized_access(_6_0, [N_0], [_16_0]))
+        else:
+            _v.vectorized_assign(s1_2, [N_0], [_16_0], _v.vectorized_access(s1_3, [N_0], [(_16_0 - 1)]))
+        _v.vectorized_assign(_4_2, [N_0], [_16_0], OR(_v.vectorized_access_simd(s0_2, [N_0], [_16_0]), _v.vectorized_access_simd(s1_2, [N_0], [_16_0])))
+        _v.vectorized_assign(s1_3, [N_0], [_16_0], _v.vectorized_access_simd(_3_2, [N_0], [_16_0]).bit_and(_v.vectorized_access_simd(_4_2, [N_0], [_16_0])))
+    # Loop exit ϕ values
+    _v.vectorized_assign(s1_2, [N_0], [_16_0], _v.vectorized_access(s1_3, [N_0], [(_16_0 - 1)]))
+    _v.vectorized_assign(_2_2, [N_0], [None], _v.vectorized_access_simd(s1_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_1_2, [N_0], [None])))
+    for _17_0 in range(0, N_0):
+        # Set ϕ value
+        if _17_0 == 0:
+            _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(_7_0, [N_0], [_17_0]))
+        else:
+            _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
+        _v.vectorized_assign(scount_3, [N_0], [_17_0], (_v.vectorized_access_simd(scount_2, [N_0], [_17_0]) + sint(1)))
+        _v.iterative_mux(scount_4,_2_2,scount_3,scount_2,[N_0],[_17_0])
+    # Loop exit ϕ values
+    _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
+    _14_0 = _v.drop_dim(scount_4, [N_0])
+    return _14_0
